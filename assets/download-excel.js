@@ -14,7 +14,7 @@ async function exportToExcel() {
         const IMAGE_WIDTH_PX = 300; // Ubah nilai ini untuk mengatur lebar gambar
         
         // Variable untuk mengatur tambahan lebar kolom (dalam persen)
-        const COLUMN_WIDTH_EXTRA_PERCENT = 10; // Ubah nilai ini untuk mengatur tambahan lebar (5 = 5%)
+        const COLUMN_WIDTH_EXTRA_PERCENT = 0; // Ubah nilai ini untuk mengatur tambahan lebar (5 = 5%)
         
         // Konversi pixels ke Excel column width (1 pixel ≈ 0.125 Excel units)
         // Tambahkan persentase tambahan untuk memberikan ruang ekstra
