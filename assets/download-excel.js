@@ -10,6 +10,16 @@ async function exportToExcel() {
     try {
         console.log('Memulai proses export Excel dengan ExcelJS...');
         
+        // Variable untuk mengatur lebar gambar (dalam pixels)
+        const IMAGE_WIDTH_PX = 300; // Ubah nilai ini untuk mengatur lebar gambar
+        
+        // Variable untuk mengatur tambahan lebar kolom (dalam persen)
+        const COLUMN_WIDTH_EXTRA_PERCENT = 10; // Ubah nilai ini untuk mengatur tambahan lebar (5 = 5%)
+        
+        // Konversi pixels ke Excel column width (1 pixel ≈ 0.125 Excel units)
+        // Tambahkan persentase tambahan untuk memberikan ruang ekstra
+        const EXCEL_COLUMN_WIDTH = IMAGE_WIDTH_PX * 0.125 * (1 + COLUMN_WIDTH_EXTRA_PERCENT / 100);
+        
         // Buat workbook baru
         const workbook = new ExcelJS.Workbook();
         let worksheet;
@@ -74,6 +84,17 @@ async function exportToExcel() {
                 try {
                     console.log(`Memproses gambar ${i + 1}...`);
                     
+                    // Dapatkan dimensi asli gambar
+                    const imageDimensions = await getImageDimensions(image.Path);
+                    
+                    // Hitung ukuran gambar berdasarkan variable lebar yang diinginkan
+                    // Gunakan lebar dari variable dan pertahankan rasio
+                    const aspectRatio = imageDimensions.width / imageDimensions.height;
+                    const calculatedWidth = IMAGE_WIDTH_PX;
+                    const calculatedHeight = calculatedWidth / aspectRatio;
+                    
+                    console.log(`Gambar asli: ${imageDimensions.width}x${imageDimensions.height}, Ukuran baru: ${calculatedWidth}x${calculatedHeight} (lebar diset: ${IMAGE_WIDTH_PX}px)`);
+                    
                     // Konversi base64 ke binary string untuk browser
                     const base64Data = image.Path.replace(/^data:image\/[a-z]+;base64,/, '');
                     const binaryString = atob(base64Data);
@@ -92,16 +113,16 @@ async function exportToExcel() {
                     // Tentukan kolom berdasarkan index gambar
                     const column = String.fromCharCode(65 + i); // A, B, C, D
                     
-                    // Tambahkan gambar ke worksheet dengan ukuran yang sesuai
+                    // Tambahkan gambar ke worksheet dengan ukuran yang diinginkan
                     worksheet.addImage(imageId, {
                         tl: { col: i, row: 0 }, // Kolom A-D, baris 1
-                        ext: { width: 150, height: 200 }
+                        ext: { width: calculatedWidth, height: calculatedHeight }
                     });
                     
-                    // Atur tinggi baris untuk gambar
-                    worksheet.getRow(1).height = 150;
+                    // JANGAN ubah tinggi baris - pertahankan ukuran cell dari template
+                    // Gambar akan menyesuaikan dengan ukuran cell yang ada
                     
-                    console.log(`Gambar ${i + 1} berhasil ditambahkan ke kolom ${column}`);
+                    console.log(`Gambar ${i + 1} berhasil ditambahkan ke kolom ${column} dengan ukuran ${calculatedWidth}x${calculatedHeight} (lebar diset: ${IMAGE_WIDTH_PX}px)`);
                 } catch (imageError) {
                     console.error(`Error memproses gambar ${i + 1}:`, imageError);
                     // Fallback: simpan path sebagai teks
@@ -111,16 +132,41 @@ async function exportToExcel() {
             }
         }
         
-        // Atur lebar kolom
-        worksheet.getColumn(1).width = 20; // A
-        worksheet.getColumn(2).width = 20; // B
-        worksheet.getColumn(3).width = 20; // C
-        worksheet.getColumn(4).width = 20; // D
+        // Atur lebar kolom gambar sesuai dengan IMAGE_WIDTH_PX
+        worksheet.getColumn(1).width = EXCEL_COLUMN_WIDTH; // A
+        worksheet.getColumn(2).width = EXCEL_COLUMN_WIDTH; // B
+        worksheet.getColumn(3).width = EXCEL_COLUMN_WIDTH; // C
+        worksheet.getColumn(4).width = EXCEL_COLUMN_WIDTH; // D
+        
+        // Kolom lainnya tetap default
         worksheet.getColumn(5).width = 15; // E
         worksheet.getColumn(6).width = 20; // F
         worksheet.getColumn(7).width = 15; // G
         worksheet.getColumn(8).width = 15; // H
         worksheet.getColumn(9).width = 15; // I
+        
+        console.log(`Lebar kolom gambar diset ke ${EXCEL_COLUMN_WIDTH} Excel units (sesuai ${IMAGE_WIDTH_PX}px)`);
+        
+        // Opsional: Merge area gambar (A1:A8, B1:B8, C1:C8, D1:D8) untuk visual yang lebih baik
+        // Comment out jika tidak ingin merge atau jika template sudah memiliki merge
+        /*
+        for (let i = 0; i < imageData.length; i++) {
+            const column = String.fromCharCode(65 + i); // A, B, C, D
+            try {
+                // Cek apakah area sudah di-merge
+                const cell = worksheet.getCell(`${column}1`);
+                if (!cell.isMerged) {
+                    worksheet.mergeCells(`${column}1:${column}8`);
+                    console.log(`Area ${column}1:${column}8 berhasil di-merge`);
+                } else {
+                    console.log(`Area ${column}1:${column}8 sudah di-merge sebelumnya`);
+                }
+            } catch (mergeError) {
+                console.log(`Tidak bisa merge area ${column}1:${column}8:`, mergeError.message);
+                // Lanjutkan tanpa merge, gambar tetap akan ditampilkan
+            }
+        }
+        */
         
         // Generate nama file dengan timestamp
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -168,6 +214,22 @@ function getImageExtension(base64String) {
     // Ekstrak ekstensi dari base64 string
     const match = base64String.match(/^data:image\/([a-z]+);base64,/);
     return match ? match[1] : 'jpeg';
+}
+
+function getImageDimensions(base64String) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = function() {
+            resolve({
+                width: this.width,
+                height: this.height
+            });
+        };
+        img.onerror = function() {
+            reject(new Error('Failed to load image'));
+        };
+        img.src = base64String;
+    });
 }
 
 function collectFormData() {
