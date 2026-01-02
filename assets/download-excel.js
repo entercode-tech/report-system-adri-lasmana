@@ -10,16 +10,6 @@ async function exportToExcel() {
     try {
         console.log('Memulai proses export Excel dengan ExcelJS...');
         
-        // Variable untuk mengatur lebar gambar (dalam pixels)
-        const IMAGE_WIDTH_PX = 300; // Ubah nilai ini untuk mengatur lebar gambar
-        
-        // Variable untuk mengatur tambahan lebar kolom (dalam persen)
-        const COLUMN_WIDTH_EXTRA_PERCENT = 0; // Ubah nilai ini untuk mengatur tambahan lebar (5 = 5%)
-        
-        // Konversi pixels ke Excel column width (1 pixel ≈ 0.125 Excel units)
-        // Tambahkan persentase tambahan untuk memberikan ruang ekstra
-        const EXCEL_COLUMN_WIDTH = IMAGE_WIDTH_PX * 0.125 * (1 + COLUMN_WIDTH_EXTRA_PERCENT / 100);
-        
         // Buat workbook baru
         const workbook = new ExcelJS.Workbook();
         let worksheet;
@@ -87,13 +77,18 @@ async function exportToExcel() {
                     // Dapatkan dimensi asli gambar
                     const imageDimensions = await getImageDimensions(image.Path);
                     
-                    // Hitung ukuran gambar berdasarkan variable lebar yang diinginkan
-                    // Gunakan lebar dari variable dan pertahankan rasio
+                    // Dapatkan lebar kolom dari worksheet (dalam Excel units)
+                    const columnWidth = worksheet.getColumn(i + 1).width;
+                    
+                    // Konversi lebar kolom Excel ke pixels (1 Excel unit ≈ 8 pixels)
+                    const columnWidthPx = columnWidth * 7.4;
+                    
+                    // Hitung ukuran gambar agar 100% mengisi lebar kolom
                     const aspectRatio = imageDimensions.width / imageDimensions.height;
-                    const calculatedWidth = IMAGE_WIDTH_PX;
+                    const calculatedWidth = columnWidthPx;
                     const calculatedHeight = calculatedWidth / aspectRatio;
                     
-                    console.log(`Gambar asli: ${imageDimensions.width}x${imageDimensions.height}, Ukuran baru: ${calculatedWidth}x${calculatedHeight} (lebar diset: ${IMAGE_WIDTH_PX}px)`);
+                    console.log(`Gambar asli: ${imageDimensions.width}x${imageDimensions.height}, Ukuran baru: ${calculatedWidth}x${calculatedHeight} (mengisi 100% lebar kolom ${columnWidth} Excel units)`);
                     
                     // Konversi base64 ke binary string untuk browser
                     const base64Data = image.Path.replace(/^data:image\/[a-z]+;base64,/, '');
@@ -122,7 +117,7 @@ async function exportToExcel() {
                     // JANGAN ubah tinggi baris - pertahankan ukuran cell dari template
                     // Gambar akan menyesuaikan dengan ukuran cell yang ada
                     
-                    console.log(`Gambar ${i + 1} berhasil ditambahkan ke kolom ${column} dengan ukuran ${calculatedWidth}x${calculatedHeight} (lebar diset: ${IMAGE_WIDTH_PX}px)`);
+                    console.log(`Gambar ${i + 1} berhasil ditambahkan ke kolom ${column} dengan ukuran ${calculatedWidth}x${calculatedHeight} (mengisi 100% lebar kolom)`);
                 } catch (imageError) {
                     console.error(`Error memproses gambar ${i + 1}:`, imageError);
                     // Fallback: simpan path sebagai teks
@@ -132,11 +127,9 @@ async function exportToExcel() {
             }
         }
         
-        // Atur lebar kolom gambar sesuai dengan IMAGE_WIDTH_PX
-        worksheet.getColumn(1).width = EXCEL_COLUMN_WIDTH; // A
-        worksheet.getColumn(2).width = EXCEL_COLUMN_WIDTH; // B
-        worksheet.getColumn(3).width = EXCEL_COLUMN_WIDTH; // C
-        worksheet.getColumn(4).width = EXCEL_COLUMN_WIDTH; // D
+        // JANGAN ubah lebar kolom gambar - gunakan lebar dari template
+        // Kolom A-D akan menggunakan lebar yang sudah ada di template
+        console.log('Menggunakan lebar kolom dari template untuk gambar 100%');
         
         // Kolom lainnya tetap default
         worksheet.getColumn(5).width = 15; // E
@@ -145,7 +138,7 @@ async function exportToExcel() {
         worksheet.getColumn(8).width = 15; // H
         worksheet.getColumn(9).width = 15; // I
         
-        console.log(`Lebar kolom gambar diset ke ${EXCEL_COLUMN_WIDTH} Excel units (sesuai ${IMAGE_WIDTH_PX}px)`);
+        console.log('Menggunakan lebar kolom dari template untuk gambar 100%');
         
         // Opsional: Merge area gambar (A1:A8, B1:B8, C1:C8, D1:D8) untuk visual yang lebih baik
         // Comment out jika tidak ingin merge atau jika template sudah memiliki merge
