@@ -167,6 +167,55 @@
     <div style="width: 80px;"></div>
 </div> -->
 
+<!-- Modal Pilihan Kamera/Galeri -->
+<div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content camera-modal">
+      <div class="modal-header border-0 pb-2">
+        <div class="d-flex align-items-center">
+          <div class="modal-icon-wrapper me-3">
+            <i data-feather="aperture" class="modal-icon"></i>
+          </div>
+          <div>
+            <h5 class="modal-title mb-1" id="cameraModalLabel">Pilih Sumber Foto</h5>
+            <small class="text-muted">Pilih dari kamera atau galeri foto Anda</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-2">
+        <div class="source-options">
+          <div class="option-card camera-btn" data-action="camera">
+            <div class="option-icon">
+              <i data-feather="camera"></i>
+            </div>
+            <div class="option-content">
+              <h6 class="option-title">Kamera</h6>
+              <p class="option-desc">Ambil foto baru menggunakan kamera perangkat</p>
+            </div>
+            <div class="option-arrow">
+              <i data-feather="chevron-right"></i>
+            </div>
+          </div>
+          
+          <div class="option-card gallery-btn" data-action="gallery">
+            <div class="option-icon">
+              <i data-feather="image"></i>
+            </div>
+            <div class="option-content">
+              <h6 class="option-title">Galeri</h6>
+              <p class="option-desc">Pilih foto yang sudah ada dari galeri</p>
+            </div>
+            <div class="option-arrow">
+              <i data-feather="chevron-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

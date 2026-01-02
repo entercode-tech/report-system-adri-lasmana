@@ -716,3 +716,183 @@ html {
         height: 22px;
     }
 }
+
+/* Camera Modal Styles */
+.camera-modal {
+    border: none;
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-heavy);
+    overflow: hidden;
+}
+
+.modal-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 200, 81, 0.3);
+}
+
+.modal-icon {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.source-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.option-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: var(--transition-spring);
+    position: relative;
+    overflow: hidden;
+}
+
+.option-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.option-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--primary-color);
+    background: var(--surface-color);
+}
+
+.option-card:hover::before {
+    opacity: 1;
+}
+
+.option-card:active {
+    transform: translateY(0);
+}
+
+.option-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--background-color), var(--surface-color));
+    border-radius: var(--border-radius-small);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    transition: var(--transition);
+}
+
+.option-card:hover .option-icon {
+    background: linear-gradient(135deg, rgba(0, 200, 81, 0.1), rgba(0, 230, 118, 0.05));
+}
+
+.option-icon i {
+    width: 24px;
+    height: 24px;
+    color: var(--primary-color);
+}
+
+.option-content {
+    flex: 1;
+}
+
+.option-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.option-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.option-arrow {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: var(--transition);
+}
+
+.option-card:hover .option-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+}
+
+.option-arrow i {
+    width: 20px;
+    height: 20px;
+    color: var(--primary-color);
+}
+
+/* Modal Animation */
+.modal.fade .modal-dialog {
+    transform: scale(0.9);
+    opacity: 0;
+    transition: var(--transition-spring);
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Responsive adjustments for modal */
+@media (max-width: 480px) {
+    .option-card {
+        padding: 16px;
+    }
+    
+    .option-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+    }
+    
+    .option-icon i {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .option-title {
+        font-size: 0.95rem;
+    }
+    
+    .option-desc {
+        font-size: 0.8rem;
+    }
+    
+    .modal-icon-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .modal-icon {
+        width: 20px;
+        height: 20px;
+    }
+}

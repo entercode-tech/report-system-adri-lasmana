@@ -1,7 +1,43 @@
 // Custom jQuery untuk Upload Gambar
 $(document).ready(function() {
-    // Set atribut capture untuk semua perangkat (mobile & desktop)
-    $('.upload-box input[type="file"]').attr('capture', 'environment');
+    let currentInput = null;
+    
+    // Fungsi untuk menampilkan modal saat upload diklik
+    $(document).on('click', '.upload-label', function(e) {
+        e.preventDefault();
+        const uploadBox = $(this).closest('.upload-box');
+        
+        // Jika sudah ada gambar, jangan tampilkan modal
+        if (uploadBox.hasClass('has-image')) {
+            return;
+        }
+        
+        currentInput = uploadBox.find('input[type="file"]');
+        $('#cameraModal').modal('show');
+    });
+    
+    // Fungsi untuk kamera
+    $(document).on('click', '.camera-btn', function() {
+        if (currentInput) {
+            currentInput.attr('capture', 'environment');
+            currentInput.click();
+        }
+        $('#cameraModal').modal('hide');
+    });
+    
+    // Fungsi untuk galeri
+    $(document).on('click', '.gallery-btn', function() {
+        if (currentInput) {
+            currentInput.removeAttr('capture');
+            currentInput.click();
+        }
+        $('#cameraModal').modal('hide');
+    });
+    
+    // Re-initialize feather icons after modal content changes
+    $('#cameraModal').on('shown.bs.modal', function () {
+        feather.replace();
+    });
     
     // Fungsi untuk preview gambar saat file dipilih
     $(document).on('change', '.upload-box input[type="file"]', function() {
