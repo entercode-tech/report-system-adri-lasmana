@@ -1,5 +1,8 @@
 // Custom jQuery untuk Upload Gambar
 $(document).ready(function() {
+    // Set atribut capture untuk semua perangkat (mobile & desktop)
+    $('.upload-box input[type="file"]').attr('capture', 'environment');
+    
     // Fungsi untuk preview gambar saat file dipilih
     $(document).on('change', '.upload-box input[type="file"]', function() {
         const file = this.files[0];
