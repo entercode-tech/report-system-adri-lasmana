@@ -1,7 +1,7 @@
 // Custom jQuery untuk Validasi Form
 $(document).ready(function() {
     // Fungsi untuk simpan laporan
-    $(document).on('click', '.btn-primary', function() {
+    $(document).on('click', '#save-report-btn', function() {
         // Validasi form
         let isValid = true;
         let errorMessage = '';
