@@ -30,6 +30,7 @@
 <script src="assets/upload.js"></script>
 <script src="assets/location.js"></script>
 <script src="assets/validation.js"></script>
+<script src="assets/download-excel.js"></script>
 
 <!-- Initialize Feather Icons -->
 <script>

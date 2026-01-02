@@ -121,8 +121,8 @@
     <div style="width: 80px;"></div>
     
     <!-- Floating Home Button di tengah -->
-    <a href="index.php" class="floating-home">
-        <i data-feather="home"></i>
+    <a href="#" class="floating-home" id="download-excel-btn">
+        <i data-feather="download"></i>
     </a>
     
     <!-- Report Button di kanan -->
