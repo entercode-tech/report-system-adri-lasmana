@@ -256,13 +256,6 @@
                         <td><input type="text" class="form-control" id="redaman-out" name="redaman_out" placeholder="Masukkan nilai redaman out"></td>
                     </tr>
                 </table>
-                
-                <div class="mt-4">
-                    <button type="button" class="btn btn-primary w-100" style="background: var(--primary-color); border: none; padding: 12px; border-radius: var(--border-radius);">
-                        <i data-feather="save" style="width: 18px; height: 18px; margin-right: 8px;"></i>
-                        Simpan Laporan
-                    </button>
-                </div>
             </div>
         </div>
     </div>

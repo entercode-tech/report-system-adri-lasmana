@@ -1,3 +1,4 @@
+<br><br>
 <?php include 'menu.php'; ?>
 </div>
 <!-- jQuery -->

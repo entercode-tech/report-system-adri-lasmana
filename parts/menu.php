@@ -7,7 +7,7 @@
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     border-radius: 30px 30px 0 0;
-    padding: 10px 10px 10px;
+    padding: 10px 30px 30px;
     z-index: 1000;
     display: flex;
     justify-content: space-between;
@@ -126,8 +126,7 @@
     </a>
     
     <!-- Report Button di kanan -->
-    <a href="laporan.php" class="nav-item report-nav">
-        <i data-feather="clipboard"></i>
-        <span>Report</span>
-    </a>
+    <div class="nav-item report-nav">
+       
+    </div>
 </div>
