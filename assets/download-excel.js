@@ -51,15 +51,21 @@ async function exportToExcel() {
         const formData = collectFormData();
         console.log('Data form:', formData);
         
-        // Tempatkan data pada sel spesifik
-        console.log('Menempatkan data pada sel spesifik...');
-        worksheet.getCell('F2').value = formData['Lokasi'];
-        worksheet.getCell('F3').value = formData['Tiang'];
-        worksheet.getCell('F4').value = formData['PON'];
-        worksheet.getCell('F5').value = formData['MS'];
-        worksheet.getCell('F6').value = formData['ODP'];
-        worksheet.getCell('F7').value = formData['Redaman In'];
-        worksheet.getCell('F8').value = formData['Redaman Out'];
+        // Tempatkan data pada sel spesifik sesuai template baru
+        console.log('Menempatkan data pada sel spesifik sesuai template...');
+        
+        // Data form di sebelah kanan (H2:K8)
+        worksheet.getCell('H2').value = formData['Lokasi'];
+        worksheet.getCell('H3').value = formData['Tiang'];
+        worksheet.getCell('H4').value = formData['PON'];
+        worksheet.getCell('H5').value = formData['MS'];
+        worksheet.getCell('H6').value = formData['ODP'];
+        worksheet.getCell('H7').value = formData['Redaman In'];
+        worksheet.getCell('H8').value = formData['Redaman Out'];
+        
+        // Keterangan di G10:K18 (merged cell)
+        worksheet.getCell('G10').value = formData['Keterangan'];
+        
         console.log('Data form berhasil ditempatkan');
         
         // Kumpulkan data gambar
@@ -67,7 +73,13 @@ async function exportToExcel() {
         const imageData = collectImageData();
         console.log('Data gambar:', imageData);
         
-        // Proses dan sisipkan gambar
+        // Proses dan sisipkan gambar sesuai template baru
+        // foto 1 = A1:A18 (merged cell)
+        // foto 2 = C1:C9 (merged cell)
+        // foto 3 = E1:E9 (merged cell)
+        // foto 4 = C10:C18 (merged cell)
+        // foto 5 = E10:E18 (merged cell)
+        
         for (let i = 0; i < imageData.length; i++) {
             const image = imageData[i];
             if (image && image.Path) {
@@ -77,18 +89,74 @@ async function exportToExcel() {
                     // Dapatkan dimensi asli gambar
                     const imageDimensions = await getImageDimensions(image.Path);
                     
-                    // Dapatkan lebar kolom dari worksheet (dalam Excel units)
-                    const columnWidth = worksheet.getColumn(i + 1).width;
+                    // Tentukan posisi dan ukuran berdasarkan index gambar
+                    let column, rowStart, rowEnd, columnLetter;
                     
-                    // Konversi lebar kolom Excel ke pixels (1 Excel unit ≈ 8 pixels)
-                    const columnWidthPx = columnWidth * 7.4;
+                    switch(i) {
+                        case 0: // Foto 1 = A1:A18
+                            column = 0; // A
+                            columnLetter = 'A';
+                            rowStart = 0; // Row 1
+                            rowEnd = 17; // Row 18
+                            break;
+                        case 1: // Foto 2 = C1:C9
+                            column = 2; // C
+                            columnLetter = 'C';
+                            rowStart = 0; // Row 1
+                            rowEnd = 8; // Row 9
+                            break;
+                        case 2: // Foto 3 = E1:E9
+                            column = 4; // E
+                            columnLetter = 'E';
+                            rowStart = 0; // Row 1
+                            rowEnd = 8; // Row 9
+                            break;
+                        case 3: // Foto 4 = C10:C18
+                            column = 2; // C
+                            columnLetter = 'C';
+                            rowStart = 9; // Row 10
+                            rowEnd = 17; // Row 18
+                            break;
+                        case 4: // Foto 5 = E10:E18
+                            column = 4; // E
+                            columnLetter = 'E';
+                            rowStart = 9; // Row 10
+                            rowEnd = 17; // Row 18
+                            break;
+                        default:
+                            continue; // Skip jika index tidak valid
+                    }
                     
-                    // Hitung ukuran gambar agar 100% mengisi lebar kolom
+                    // Hitung tinggi total dari merged cell (dalam baris)
+                    const totalRows = rowEnd - rowStart + 1;
+                    
+                    // Dapatkan tinggi baris default (dalam points)
+                    // Excel default row height adalah 15 points, tapi kita cek dari template
+                    const defaultRowHeight = 15; // points
+                    
+                    // Konversi tinggi baris ke pixels (1 point ≈ 1.33 pixels)
+                    const cellHeightPx = totalRows * defaultRowHeight * 1.33;
+                    
+                    // Hitung aspect ratio gambar
                     const aspectRatio = imageDimensions.width / imageDimensions.height;
-                    const calculatedWidth = columnWidthPx;
-                    const calculatedHeight = calculatedWidth / aspectRatio;
                     
-                    console.log(`Gambar asli: ${imageDimensions.width}x${imageDimensions.height}, Ukuran baru: ${calculatedWidth}x${calculatedHeight} (mengisi 100% lebar kolom ${columnWidth} Excel units)`);
+                    // Tentukan tinggi gambar agar sesuai dengan tinggi merged cell
+                    const calculatedHeight = cellHeightPx;
+                    
+                    // Hitung lebar gambar berdasarkan aspect ratio dan tinggi yang sudah ditentukan
+                    const calculatedWidth = calculatedHeight * aspectRatio;
+                    
+                    // Konversi lebar gambar ke Excel units (1 Excel unit ≈ 7.4 pixels)
+                    const columnWidth = calculatedWidth / 7.4;
+                    
+                    // Atur lebar kolom agar sesuai dengan lebar gambar
+                    worksheet.getColumn(column + 1).width = columnWidth;
+                    
+                    console.log(`Gambar ${i + 1} (${columnLetter}):`);
+                    console.log(`  Tinggi merged cell: ${totalRows} baris = ${cellHeightPx}px`);
+                    console.log(`  Gambar asli: ${imageDimensions.width}x${imageDimensions.height}`);
+                    console.log(`  Ukuran baru: ${calculatedWidth.toFixed(2)}x${calculatedHeight.toFixed(2)}px`);
+                    console.log(`  Lebar kolom diatur ke: ${columnWidth.toFixed(2)} Excel units`);
                     
                     // Konversi base64 ke binary string untuk browser
                     const base64Data = image.Path.replace(/^data:image\/[a-z]+;base64,/, '');
@@ -105,24 +173,43 @@ async function exportToExcel() {
                         extension: getImageExtension(image.Path)
                     });
                     
-                    // Tentukan kolom berdasarkan index gambar
-                    const column = String.fromCharCode(65 + i); // A, B, C, D
-                    
-                    // Tambahkan gambar ke worksheet dengan ukuran yang diinginkan
+                    // Tambahkan gambar ke worksheet dengan ukuran dan posisi yang diinginkan
                     worksheet.addImage(imageId, {
-                        tl: { col: i, row: 0 }, // Kolom A-D, baris 1
+                        tl: { col: column, row: rowStart },
                         ext: { width: calculatedWidth, height: calculatedHeight }
                     });
                     
-                    // JANGAN ubah tinggi baris - pertahankan ukuran cell dari template
-                    // Gambar akan menyesuaikan dengan ukuran cell yang ada
-                    
-                    console.log(`Gambar ${i + 1} berhasil ditambahkan ke kolom ${column} dengan ukuran ${calculatedWidth}x${calculatedHeight} (mengisi 100% lebar kolom)`);
+                    console.log(`Gambar ${i + 1} berhasil ditambahkan ke kolom ${columnLetter} baris ${rowStart + 1}-${rowEnd + 1}`);
                 } catch (imageError) {
                     console.error(`Error memproses gambar ${i + 1}:`, imageError);
                     // Fallback: simpan path sebagai teks
-                    const column = String.fromCharCode(65 + i);
-                    worksheet.getCell(`${column}1`).value = 'Error loading image';
+                    let fallbackColumn, fallbackRow;
+                    switch(i) {
+                        case 0: // Foto 1 = A1:A18
+                            fallbackColumn = 'A';
+                            fallbackRow = 1;
+                            break;
+                        case 1: // Foto 2 = C1:C9
+                            fallbackColumn = 'C';
+                            fallbackRow = 1;
+                            break;
+                        case 2: // Foto 3 = E1:E9
+                            fallbackColumn = 'E';
+                            fallbackRow = 1;
+                            break;
+                        case 3: // Foto 4 = C10:C18
+                            fallbackColumn = 'C';
+                            fallbackRow = 10;
+                            break;
+                        case 4: // Foto 5 = E10:E18
+                            fallbackColumn = 'E';
+                            fallbackRow = 10;
+                            break;
+                        default:
+                            fallbackColumn = 'A';
+                            fallbackRow = 1;
+                    }
+                    worksheet.getCell(`${fallbackColumn}${fallbackRow}`).value = 'Error loading image';
                 }
             }
         }
@@ -231,6 +318,7 @@ function collectFormData() {
         'ODP': document.getElementById('odp').value,
         'Redaman In': document.getElementById('redaman-in').value,
         'Redaman Out': document.getElementById('redaman-out').value,
+        'Keterangan': document.getElementById('keterangan').value,
         'Tanggal': new Date().toLocaleString('id-ID')
     };
 }
@@ -238,8 +326,8 @@ function collectFormData() {
 function collectImageData() {
     const imageData = [];
     
-    // Loop melalui semua upload box
-    for (let i = 1; i <= 4; i++) {
+    // Loop melalui semua upload box (sekarang 5 foto)
+    for (let i = 1; i <= 5; i++) {
         const uploadBox = document.querySelector(`.upload-box[data-index="${i}"]`);
         const img = uploadBox.querySelector('img');
         

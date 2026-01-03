@@ -16,6 +16,12 @@
 
     <!-- Lightbox CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
     <link rel="stylesheet" href="assets/styles.css">
 </head>
 
@@ -30,10 +36,11 @@
                 </div>
             </div>
         </nav>
-
+        
+        <!-- <div id="map" class="map-container"></div> -->
 
         <div class="container-fluid p-3 mt-3">
-            <!-- Grid 4 Kolom untuk Upload Gambar -->
+            <!-- Grid 5 Kolom untuk Upload Gambar -->
             <div class="row row-cols-2 g-3">
                 <div class="col mb-3">
                     <div class="upload-container">
@@ -95,6 +102,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="col mb-3">
+                    <div class="upload-container">
+                        <div class="upload-box" data-index="5">
+                            <label for="file-input-5" class="upload-label">
+                                <i data-feather="plus-circle" class="upload-icon"></i>
+                                <span class="upload-text">Tambah Foto</span>
+                                <img src="" alt="Preview" style="display: none;">
+                                <button class="delete-btn" type="button">
+                                    <i data-feather="x" style="width: 16px; height: 16px;"></i>
+                                </button>
+                            </label>
+                            <input type="file" id="file-input-5" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Form Keterangan -->
@@ -146,6 +168,11 @@
                                 <td>Redaman Out</td>
                                 <td><input type="text" class="form-control" id="redaman-out" name="redaman_out"
                                         placeholder="Masukkan nilai redaman out"></td>
+                            </tr>
+                            <tr>
+                                <td>Keterangan</td>
+                                <td><textarea class="form-control" id="keterangan" name="keterangan"
+                                        placeholder="Masukkan keterangan tambahan" rows="3"></textarea></td>
                             </tr>
                         </table>
                     </div>
@@ -244,12 +271,18 @@
 
     <!-- ExcelJS untuk Excel dengan dukungan gambar -->
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
 
     <!-- Custom JavaScript Files -->
     <script src="assets/upload.js"></script>
     <script src="assets/location.js"></script>
     <script src="assets/validation.js"></script>
     <script src="assets/download-excel.js"></script>
+    <script src="assets/leaflet-map.js"></script>
 
     <!-- Initialize Feather Icons -->
     <script src="assets/main.js"></script>
