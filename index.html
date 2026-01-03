@@ -34,8 +34,84 @@
                     <i data-feather="file-text" class="me-2"></i>
                     <span>Report System</span>
                 </div>
+                
+                <!-- Toggle Button for Offcanvas -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#reportsOffcanvas" aria-controls="reportsOffcanvas">
+                    <i data-feather="list"></i>
+                </button>
             </div>
         </nav>
+        
+        <!-- Offcanvas for Reports List -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="reportsOffcanvas" aria-labelledby="reportsOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="reportsOffcanvasLabel">
+                    <i data-feather="file-text" class="me-2"></i>
+                    Daftar Laporan
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="reports-list">
+                    <!-- Static Report Items -->
+                    <div class="report-item">
+                        <div class="report-icon">
+                            <i data-feather="file-text"></i>
+                        </div>
+                        <div class="report-content">
+                            <div class="report-date">2024-01-03 14:30</div>
+                            <div class="report-title">Laporan Tiang #A-123</div>
+                            <div class="report-actions">
+                                <button class="btn btn-sm btn-outline-primary download-report-btn">Download</button>
+                                <button class="btn btn-sm btn-outline-danger delete-report-btn">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-item">
+                        <div class="report-icon">
+                            <i data-feather="file-text"></i>
+                        </div>
+                        <div class="report-content">
+                            <div class="report-date">2024-01-03 12:15</div>
+                            <div class="report-title">Laporan Tiang #B-456</div>
+                            <div class="report-actions">
+                                <button class="btn btn-sm btn-outline-primary download-report-btn">Download</button>
+                                <button class="btn btn-sm btn-outline-danger delete-report-btn">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-item">
+                        <div class="report-icon">
+                            <i data-feather="file-text"></i>
+                        </div>
+                        <div class="report-content">
+                            <div class="report-date">2024-01-03 10:45</div>
+                            <div class="report-title">Laporan Tiang #C-789</div>
+                            <div class="report-actions">
+                                <button class="btn btn-sm btn-outline-primary download-report-btn">Download</button>
+                                <button class="btn btn-sm btn-outline-danger delete-report-btn">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-item">
+                        <div class="report-icon">
+                            <i data-feather="file-text"></i>
+                        </div>
+                        <div class="report-content">
+                            <div class="report-date">2024-01-02 16:20</div>
+                            <div class="report-title">Laporan Tiang #D-012</div>
+                            <div class="report-actions">
+                                <button class="btn btn-sm btn-outline-primary download-report-btn">Download</button>
+                                <button class="btn btn-sm btn-outline-danger delete-report-btn">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- <div id="map" class="map-container"></div> -->
 
@@ -182,7 +258,7 @@
             <!-- Tombol Buat Laporan -->
             <div class="row mt-4">
                 <div class="col-12 text-center">
-                    <button id="download-excel-btn" class="btn btn-success w-100 py-3">
+                    <button id="upload-btn" class="btn btn-success w-100 py-3">
                         <i data-feather="file-text" class="me-2"></i>
                         Buat Laporan
                     </button>
@@ -283,9 +359,27 @@
     <script src="assets/validation.js"></script>
     <script src="assets/download-excel.js"></script>
     <script src="assets/leaflet-map.js"></script>
+    <script src="assets/api/get.js"></script>
+    <script src="assets/api/store.js"></script>
+    <script src="assets/api/delete.js"></script>
+    <script src="assets/api/download.js"></script>
 
     <!-- Initialize Feather Icons -->
     <script src="assets/main.js"></script>
+    
+    <!-- Initialize Feather Icons for Offcanvas -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize feather icons for dynamically loaded content
+            feather.replace();
+            
+            // Re-initialize feather icons when offcanvas is shown
+            const reportsOffcanvas = document.getElementById('reportsOffcanvas');
+            reportsOffcanvas.addEventListener('shown.bs.offcanvas', function() {
+                feather.replace();
+            });
+        });
+    </script>
 </body>
 
 </html>

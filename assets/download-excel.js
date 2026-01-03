@@ -1,3 +1,9 @@
+// Global function for downloading Excel
+window.downloadExcel = function(reportData) {
+    console.log('Download Excel called with data:', reportData);
+    exportToExcelWithData(reportData);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Event listener untuk tombol download
     document.getElementById('download-excel-btn').addEventListener('click', function(e) {
@@ -293,6 +299,12 @@ function getImageExtension(base64String) {
     return match ? match[1] : 'jpeg';
 }
 
+function getImageExtensionFromUrl(url) {
+    // Ekstrak ekstensi dari URL
+    const parts = url.split('.');
+    return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : 'jpg';
+}
+
 function getImageDimensions(base64String) {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -306,6 +318,22 @@ function getImageDimensions(base64String) {
             reject(new Error('Failed to load image'));
         };
         img.src = base64String;
+    });
+}
+
+function getImageDimensionsFromBlob(blob) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = function() {
+            resolve({
+                width: this.width,
+                height: this.height
+            });
+        };
+        img.onerror = function() {
+            reject(new Error('Failed to load image'));
+        };
+        img.src = URL.createObjectURL(blob);
     });
 }
 

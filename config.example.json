@@ -1,0 +1,40 @@
+{
+  "api_report": {
+    "get_all": {
+      "endpoint": "https://example.com/api/reports",
+      "method": "GET",
+      "available_params": [
+        "team_id",
+        "lokasi",
+        "tiang",
+        "pon",
+        "ms",
+        "odp",
+        "redaman_in",
+        "redaman_out",
+        "notes"
+      ]
+    },
+    "store": {
+      "endpoint": "https://example.com/api/reports",
+      "method": "POST",
+      "available_params": {
+        "team_id": "TEAM-001",
+        "lokasi": "Jakarta Pusat",
+        "tiang": "Tiang-123",
+        "pon": "PON-456",
+        "ms": "MS-789",
+        "odp": "ODP-101",
+        "redaman_in": "12.5",
+        "redaman_out": "8.3",
+        "notes": "Laporan inspeksi rutin",
+        "images": "image"
+      }
+    },
+    "delete": {
+      "endpoint": "https://example.com/api/reports/:id",
+      "method": "DELETE",
+      "available_params": []
+    }
+  }
+}
