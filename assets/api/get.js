@@ -52,7 +52,7 @@ $(document).ready(function() {
                 // Show error state
                 $('.reports-list').html('<div class="text-center py-4 text-muted">Gagal memuat laporan</div>');
             }
-        });
+        }); 
     };
     
     // Render Reports in Offcanvas
