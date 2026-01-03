@@ -281,7 +281,8 @@ body {
     opacity: 1;
 }
 
-.upload-box {
+/* Upload Box untuk tombol kecil (4 tombol di bawah) */
+.upload-box:not(.upload-box-main) {
     aspect-ratio: 1;
     border: 2px dashed var(--border-color);
     border-radius: var(--border-radius);
@@ -296,29 +297,29 @@ body {
     background: linear-gradient(135deg, #F8F9FA, #FFFFFF);
 }
 
-.upload-box:hover {
+.upload-box:not(.upload-box-main):hover {
     border-color: var(--primary-color);
     background: linear-gradient(135deg, rgba(0, 200, 81, 0.05), rgba(0, 230, 118, 0.02));
     transform: translateY(-2px);
     box-shadow: var(--shadow-medium);
 }
 
-.upload-box:active {
+.upload-box:not(.upload-box-main):active {
     transform: translateY(0);
 }
 
-.upload-box.has-image {
+.upload-box:not(.upload-box-main).has-image {
     border: 2px solid var(--primary-color);
     background: var(--surface-color);
     box-shadow: var(--shadow-light);
 }
 
-.upload-box.has-image:hover {
+.upload-box:not(.upload-box-main).has-image:hover {
     transform: scale(1.02);
     box-shadow: var(--shadow-medium);
 }
 
-.upload-box img {
+.upload-box:not(.upload-box-main) img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -328,11 +329,11 @@ body {
     transition: var(--transition);
 }
 
-.upload-box.has-image:hover img {
+.upload-box:not(.upload-box-main).has-image:hover img {
     filter: brightness(0.95);
 }
 
-.upload-icon {
+.upload-box:not(.upload-box-main) .upload-icon {
     width: 48px;
     height: 48px;
     color: var(--primary-color);
@@ -341,12 +342,12 @@ body {
     transition: var(--transition-spring);
 }
 
-.upload-box:hover .upload-icon {
+.upload-box:not(.upload-box-main):hover .upload-icon {
     transform: scale(1.1);
     color: var(--primary-dark);
 }
 
-.upload-text {
+.upload-box:not(.upload-box-main) .upload-text {
     color: var(--text-secondary);
     font-size: 0.9rem;
     font-weight: 500;
@@ -354,7 +355,7 @@ body {
     transition: var(--transition);
 }
 
-.upload-box:hover .upload-text {
+.upload-box:not(.upload-box-main):hover .upload-text {
     color: var(--primary-color);
 }
 
