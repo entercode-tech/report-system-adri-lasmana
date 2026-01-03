@@ -116,14 +116,15 @@
         <!-- <div id="map" class="map-container"></div> -->
 
         <div class="container-fluid p-3 mt-3">
-            <!-- Grid 5 Kolom untuk Upload Gambar -->
-            <div class="row row-cols-2 g-3">
-                <div class="col mb-3">
+            <!-- Grid Upload Gambar dengan Layout Kustom -->
+            <div class="upload-grid-container">
+                <!-- Tombol Upload Pertama (Besar) -->
+                <div class="upload-main-container mb-3">
                     <div class="upload-container">
-                        <div class="upload-box" data-index="1">
+                        <div class="upload-box upload-box-main" data-index="1">
                             <label for="file-input-1" class="upload-label">
                                 <i data-feather="plus-circle" class="upload-icon"></i>
-                                <span class="upload-text">Tambah Foto</span>
+                                <span class="upload-text">Tambah Foto Utama</span>
                                 <img src="" alt="Preview" style="display: none;">
                                 <button class="delete-btn" type="button">
                                     <i data-feather="x" style="width: 16px; height: 16px;"></i>
@@ -133,63 +134,67 @@
                         </div>
                     </div>
                 </div>
-                <div class="col mb-3">
-                    <div class="upload-container">
-                        <div class="upload-box" data-index="2">
-                            <label for="file-input-2" class="upload-label">
-                                <i data-feather="plus-circle" class="upload-icon"></i>
-                                <span class="upload-text">Tambah Foto</span>
-                                <img src="" alt="Preview" style="display: none;">
-                                <button class="delete-btn" type="button">
-                                    <i data-feather="x" style="width: 16px; height: 16px;"></i>
-                                </button>
-                            </label>
-                            <input type="file" id="file-input-2" accept="image/*" style="display: none;">
+                
+                <!-- 4 Tombol Upload Lainnya (Kecil) -->
+                <div class="row row-cols-2 g-3">
+                    <div class="col mb-3">
+                        <div class="upload-container">
+                            <div class="upload-box" data-index="2">
+                                <label for="file-input-2" class="upload-label">
+                                    <i data-feather="plus-circle" class="upload-icon"></i>
+                                    <span class="upload-text">Tambah Foto</span>
+                                    <img src="" alt="Preview" style="display: none;">
+                                    <button class="delete-btn" type="button">
+                                        <i data-feather="x" style="width: 16px; height: 16px;"></i>
+                                    </button>
+                                </label>
+                                <input type="file" id="file-input-2" accept="image/*" style="display: none;">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col mb-3">
-                    <div class="upload-container">
-                        <div class="upload-box" data-index="3">
-                            <label for="file-input-3" class="upload-label">
-                                <i data-feather="plus-circle" class="upload-icon"></i>
-                                <span class="upload-text">Tambah Foto</span>
-                                <img src="" alt="Preview" style="display: none;">
-                                <button class="delete-btn" type="button">
-                                    <i data-feather="x" style="width: 16px; height: 16px;"></i>
-                                </button>
-                            </label>
-                            <input type="file" id="file-input-3" accept="image/*" style="display: none;">
+                    <div class="col mb-3">
+                        <div class="upload-container">
+                            <div class="upload-box" data-index="3">
+                                <label for="file-input-3" class="upload-label">
+                                    <i data-feather="plus-circle" class="upload-icon"></i>
+                                    <span class="upload-text">Tambah Foto</span>
+                                    <img src="" alt="Preview" style="display: none;">
+                                    <button class="delete-btn" type="button">
+                                        <i data-feather="x" style="width: 16px; height: 16px;"></i>
+                                    </button>
+                                </label>
+                                <input type="file" id="file-input-3" accept="image/*" style="display: none;">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col mb-3">
-                    <div class="upload-container">
-                        <div class="upload-box" data-index="4">
-                            <label for="file-input-4" class="upload-label">
-                                <i data-feather="plus-circle" class="upload-icon"></i>
-                                <span class="upload-text">Tambah Foto</span>
-                                <img src="" alt="Preview" style="display: none;">
-                                <button class="delete-btn" type="button">
-                                    <i data-feather="x" style="width: 16px; height: 16px;"></i>
-                                </button>
-                            </label>
-                            <input type="file" id="file-input-4" accept="image/*" style="display: none;">
+                    <div class="col mb-3">
+                        <div class="upload-container">
+                            <div class="upload-box" data-index="4">
+                                <label for="file-input-4" class="upload-label">
+                                    <i data-feather="plus-circle" class="upload-icon"></i>
+                                    <span class="upload-text">Tambah Foto</span>
+                                    <img src="" alt="Preview" style="display: none;">
+                                    <button class="delete-btn" type="button">
+                                        <i data-feather="x" style="width: 16px; height: 16px;"></i>
+                                    </button>
+                                </label>
+                                <input type="file" id="file-input-4" accept="image/*" style="display: none;">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col mb-3">
-                    <div class="upload-container">
-                        <div class="upload-box" data-index="5">
-                            <label for="file-input-5" class="upload-label">
-                                <i data-feather="plus-circle" class="upload-icon"></i>
-                                <span class="upload-text">Tambah Foto</span>
-                                <img src="" alt="Preview" style="display: none;">
-                                <button class="delete-btn" type="button">
-                                    <i data-feather="x" style="width: 16px; height: 16px;"></i>
-                                </button>
-                            </label>
-                            <input type="file" id="file-input-5" accept="image/*" style="display: none;">
+                    <div class="col mb-3">
+                        <div class="upload-container">
+                            <div class="upload-box" data-index="5">
+                                <label for="file-input-5" class="upload-label">
+                                    <i data-feather="plus-circle" class="upload-icon"></i>
+                                    <span class="upload-text">Tambah Foto</span>
+                                    <img src="" alt="Preview" style="display: none;">
+                                    <button class="delete-btn" type="button">
+                                        <i data-feather="x" style="width: 16px; height: 16px;"></i>
+                                    </button>
+                                </label>
+                                <input type="file" id="file-input-5" accept="image/*" style="display: none;">
+                            </div>
                         </div>
                     </div>
                 </div>

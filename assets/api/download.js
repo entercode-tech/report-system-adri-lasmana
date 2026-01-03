@@ -1,18 +1,13 @@
 // Download API Handler for Report System
 $(document).ready(function() {
-    // Load configuration
-    let config = {};
-    
-    // Load config from config.json
-    $.getJSON('config.json')
-        .done(function(data) {
-            config = data;
-            console.log('Configuration loaded successfully');
-        })
-        .fail(function() {
-            console.error('Failed to load configuration');
-            alertify.error('Gagal memuat konfigurasi');
-        });
+    // Hardcoded API endpoints
+    const config = {
+        api_report: {
+            get_all: {
+                endpoint: "https://ardi-report-system.webentercode.com/api/reports"
+            }
+        }
+    };
     
     // Download Report Handler
     $(document).on('click', '.download-report-btn', function() {
@@ -76,7 +71,14 @@ $(document).ready(function() {
                                     updated_at: report.updated_at,
                                     images: report.images || []
                                 };
-                                resolve(excelData);
+                                
+                                // Call the exportToExcelWithData function from download-excel.js
+                                if (typeof exportToExcelWithData === 'function') {
+                                    exportToExcelWithData(excelData);
+                                } else {
+                                    console.error('exportToExcelWithData function not found');
+                                    alertify.error('Fungsi export tidak tersedia');
+                                }
                             } else {
                                 reject('Report not found in API response');
                             }
