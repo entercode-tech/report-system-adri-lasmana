@@ -1,18 +1,13 @@
 // Delete API Handler for Report System
 $(document).ready(function() {
-    // Load configuration
-    let config = {};
-    
-    // Load config from config.json
-    $.getJSON('config.json')
-        .done(function(data) {
-            config = data;
-            console.log('Configuration loaded successfully');
-        })
-        .fail(function() {
-            console.error('Failed to load configuration');
-            alertify.error('Gagal memuat konfigurasi');
-        });
+    // Hardcoded API endpoints
+    const config = {
+        api_report: {
+            delete: {
+                endpoint: "https://ardi-report-system.webentercode.com/api/reports/:id"
+            }
+        }
+    };
     
     // Delete Report Handler
     $(document).on('click', '.delete-report-btn', function() {
