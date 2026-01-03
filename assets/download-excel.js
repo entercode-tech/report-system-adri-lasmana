@@ -166,39 +166,36 @@ async function exportToExcel() {
         const fileName = `laporan-lapangan-${timestamp}.xlsx`;
         console.log('Nama file:', fileName);
         
-        // Download file Excel
-        console.log('Mengunduh file Excel...');
+        // Download file Excel di tab baru
+        console.log('Mengunduh file Excel di tab baru...');
         
         // Tulis workbook ke buffer
         const buffer = await workbook.xlsx.writeBuffer();
         
-        // Buat blob dan download
+        // Buat blob dan buka di tab baru
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
         
-        // Cleanup
+        // Buka di tab baru
+        window.open(url, '_blank');
+        
+        // Cleanup setelah beberapa saat
         setTimeout(() => {
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        }, 0);
+        }, 1000);
         
         console.log('File Excel berhasil diunduh');
         
         // Tampilkan notifikasi sukses
         if (typeof alertify !== 'undefined') {
-            alertify.success('Data berhasil diunduh ke file Excel!');
+            alertify.success('File Excel berhasil dibuka di tab baru!');
         } else {
-            console.log('Data berhasil diunduh ke file Excel!');
+            console.log('File Excel berhasil dibuka di tab baru!');
         }
     } catch (error) {
         console.error('Error saat export Excel:', error);
         if (typeof alertify !== 'undefined') {
-            alertify.error('Terjadi kesalahan saat mengunduh file Excel. Error: ' + error.message);
+            alertify.error('Terjadi kesalahan saat membuka file Excel di tab baru. Error: ' + error.message);
         }
     }
 }
