@@ -48,12 +48,6 @@
                     <i data-feather="download" class="me-2"></i>
                     <span>Download & Kelola Laporan</span>
                 </div>
-                
-                <!-- Back Button -->
-                <a href="index.html" class="btn btn-outline-light">
-                    <i data-feather="arrow-left" class="me-2"></i>
-                    Kembali
-                </a>
             </div>
         </nav>
 
@@ -369,7 +363,6 @@
                     const tempLink = document.createElement('a');
                     tempLink.href = downloadUrl;
                     tempLink.download = filename;
-                    tempLink.target = '_blank';
                     document.body.appendChild(tempLink);
                     tempLink.click();
                     document.body.removeChild(tempLink);

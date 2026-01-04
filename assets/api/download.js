@@ -224,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const tempLink = document.createElement('a');
             tempLink.href = downloadUrl;
             tempLink.download = filename;
-            tempLink.target = '_blank';
             document.body.appendChild(tempLink);
             tempLink.click();
             document.body.removeChild(tempLink);
