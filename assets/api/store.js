@@ -11,6 +11,11 @@ $(document).ready(function() {
     
     // Upload Report Handler
     $('#upload-btn').on('click', function() {
+        // Check if button is already disabled (processing)
+        if ($(this).prop('disabled')) {
+            return;
+        }
+        
         // Validate form before upload
         if (!validateForm()) {
             return;
@@ -22,11 +27,17 @@ $(document).ready(function() {
     
     // Function to get location and then submit
     function getLocationAndSubmit($btn) {
+        // Disable button and show spinner
+        $btn.prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-2"></i> Mendapatkan lokasi...');
+        
         // Show loading state for location
         alertify.message('Mendapatkan lokasi...');
         
         if (!navigator.geolocation) {
             alertify.error('Browser tidak mendukung geolocation. Silakan gunakan browser lain.');
+            // Restore button state
+            $btn.prop('disabled', false).html('<i data-feather="file-text" class="me-2"></i> Buat Laporan');
+            feather.replace();
             return;
         }
         
@@ -66,6 +77,10 @@ $(document).ready(function() {
                 
                 $('#coords-text').html(`${errorMessage}<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>`);
                 alertify.error(errorMessage);
+                
+                // Restore button state
+                $btn.prop('disabled', false).html('<i data-feather="file-text" class="me-2"></i> Buat Laporan');
+                feather.replace();
             }
         );
     }
@@ -76,11 +91,14 @@ $(document).ready(function() {
         const locationValue = $('#location-input').val();
         if (!locationValue || locationValue.trim() === '') {
             alertify.error('Lokasi tidak tersedia. Silakan coba lagi atau izinkan lokasi perangkat Anda.');
+            // Restore button state
+            $btn.prop('disabled', false).html('<i data-feather="file-text" class="me-2"></i> Buat Laporan');
+            feather.replace();
             return;
         }
         
         // Show loading state
-        const originalText = $btn.html();
+        const originalText = '<i data-feather="file-text" class="me-2"></i> Buat Laporan';
         $btn.prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-2"></i> Mengirim...');
         
         // Prepare form data
@@ -181,7 +199,8 @@ $(document).ready(function() {
             },
             complete: function() {
                 // Restore button state
-                $btn.prop('disabled', false).html(originalText);
+                $btn.prop('disabled', false).html('<i data-feather="file-text" class="me-2"></i> Buat Laporan');
+                feather.replace();
             }
         });
     }
