@@ -52,62 +52,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-                <div class="reports-list">
-                    <!-- Static Report Items -->
-                    <div class="report-item">
-                        <div class="report-icon">
-                            <i data-feather="file-text"></i>
-                        </div>
-                        <div class="report-content">
-                            <div class="report-date">2024-01-03 14:30</div>
-                            <div class="report-title">Laporan Tiang #A-123</div>
-                            <div class="report-actions">
-                                <button class="btn btn-sm btn-outline-primary download-report-btn">Download</button>
-                                <button class="btn btn-sm btn-outline-danger delete-report-btn">Hapus</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="report-item">
-                        <div class="report-icon">
-                            <i data-feather="file-text"></i>
-                        </div>
-                        <div class="report-content">
-                            <div class="report-date">2024-01-03 12:15</div>
-                            <div class="report-title">Laporan Tiang #B-456</div>
-                            <div class="report-actions">
-                                <button class="btn btn-sm btn-outline-primary download-report-btn">Download</button>
-                                <button class="btn btn-sm btn-outline-danger delete-report-btn">Hapus</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="report-item">
-                        <div class="report-icon">
-                            <i data-feather="file-text"></i>
-                        </div>
-                        <div class="report-content">
-                            <div class="report-date">2024-01-03 10:45</div>
-                            <div class="report-title">Laporan Tiang #C-789</div>
-                            <div class="report-actions">
-                                <button class="btn btn-sm btn-outline-primary download-report-btn">Download</button>
-                                <button class="btn btn-sm btn-outline-danger delete-report-btn">Hapus</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="report-item">
-                        <div class="report-icon">
-                            <i data-feather="file-text"></i>
-                        </div>
-                        <div class="report-content">
-                            <div class="report-date">2024-01-02 16:20</div>
-                            <div class="report-title">Laporan Tiang #D-012</div>
-                            <div class="report-actions">
-                                <button class="btn btn-sm btn-outline-primary download-report-btn">Download</button>
-                                <button class="btn btn-sm btn-outline-danger delete-report-btn">Hapus</button>
-                            </div>
-                        </div>
+                <div class="reports-list" id="reports-list-container">
+                    <!-- Konten laporan akan dimuat secara dinamis melalui JavaScript -->
+                    <div class="text-center p-4" id="no-reports-message">
+                        <i data-feather="inbox" style="width: 48px; height: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>Belum Ada Laporan</p>
                     </div>
                 </div>
             </div>
@@ -328,6 +277,29 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Modal Detail Laporan -->
+        <div class="modal fade" id="reportDetailModal" tabindex="-1" aria-labelledby="reportDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reportDetailModalLabel">
+                            <i data-feather="file-text" class="me-2"></i>
+                            Detail Laporan
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="report-detail-content">
+                            <!-- Konten detail laporan akan dimuat secara dinamis -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     <!-- jQuery -->
@@ -364,7 +336,7 @@
     <script src="assets/validation.js?v=0.1"></script>
     <script src="assets/download-excel.js?v=0.1"></script>
     <script src="assets/leaflet-map.js?v=0.1"></script>
-    <script src="assets/api/get.js?v=0.1"></script>
+    <script src="assets/api/get.js?v=0.2"></script>
     <script src="assets/api/store.js?v=0.1"></script>
     <script src="assets/api/delete.js?v=0.1"></script>
     <script src="assets/api/download.js?v=0.2"></script>
