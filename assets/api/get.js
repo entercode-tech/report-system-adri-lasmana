@@ -14,21 +14,13 @@ $(document).ready(function() {
     
     // Load Reports Handler
     window.loadReports = function() {
-        const teamId = localStorage.getItem('team_id');
-        
-        if (!teamId) {
-            console.warn('No team_id found');
-            $('.reports-list').html('<div class="text-center py-4 text-muted">Team ID tidak ditemukan</div>');
-            return;
-        }
-        
         // Show loading state
         $('.reports-list').html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
         
         $.ajax({
             url: config.api_report.get_all.endpoint,
             type: 'GET',
-            data: { team_id: teamId },
+            data: {},
             success: function(response) {
                 console.log('Reports response:', response);
                 
