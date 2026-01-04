@@ -16,8 +16,63 @@ $(document).ready(function() {
             return;
         }
         
+        // Get location before submitting
+        getLocationAndSubmit($(this));
+    });
+    
+    // Function to get location and then submit
+    function getLocationAndSubmit($btn) {
+        // Show loading state for location
+        alertify.message('Mendapatkan lokasi...');
+        
+        if (!navigator.geolocation) {
+            alertify.error('Browser tidak mendukung geolocation. Silakan gunakan browser lain.');
+            return;
+        }
+        
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                
+                // Update tampilan lokasi
+                $('#coords-text').html(`${lat.toFixed(6)}, ${lng.toFixed(6)}<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>`);
+                
+                // Simpan ke input hidden
+                $('#location-input').val(`${lat},${lng}`);
+                
+                alertify.success('Lokasi berhasil didapatkan');
+                
+                // Continue with submission
+                submitReport($btn);
+            },
+            function(error) {
+                let errorMessage = 'Gagal mendapatkan lokasi: ';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage += 'Izin lokasi ditolak. Silakan izinkan lokasi perangkat Anda.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage += 'Informasi lokasi tidak tersedia.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage += 'Permintaan lokasi timeout.';
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        errorMessage += 'Terjadi kesalahan yang tidak diketahui.';
+                        break;
+                }
+                
+                $('#coords-text').html(`${errorMessage}<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>`);
+                alertify.error(errorMessage);
+            }
+        );
+    }
+    
+    // Function to submit report after getting location
+    function submitReport($btn) {
         // Show loading state
-        const $btn = $(this);
         const originalText = $btn.html();
         $btn.prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-2"></i> Mengirim...');
         
@@ -31,7 +86,7 @@ $(document).ready(function() {
         }
         
         // Add form fields
-        formData.append('lokasi', $('#location-input').val() || $('#coords-text').text());
+        formData.append('lokasi', $('#location-input').val());
         formData.append('tiang', $('#tiang').val());
         formData.append('pon', $('#pon').val());
         formData.append('ms', $('#ms').val());
@@ -73,7 +128,7 @@ $(document).ready(function() {
                 }
             });
         }
-    });
+    }
     
     // Send FormData function
     function sendFormData(formData, $btn, originalText) {
@@ -157,7 +212,7 @@ $(document).ready(function() {
         // Clear form fields
         $('#tiang, #pon, #ms, #odp, #redaman-in, #redaman-out, #keterangan').val('');
         $('#location-input').val('');
-        $('#coords-text').html('Mendapatkan lokasi...<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>');
+        $('#coords-text').html('Lokasi akan didapatkan saat membuat laporan<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>');
         
         // Clear uploaded images
         $('.upload-box').each(function() {
