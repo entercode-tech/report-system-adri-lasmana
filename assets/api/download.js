@@ -1,13 +1,10 @@
 // Download Excel API
 document.addEventListener('DOMContentLoaded', function() {
     // Get DOM elements
-    const downloadExcelBtn = document.getElementById('download-excel-btn');
-    const downloadExcelModal = document.getElementById('downloadExcelModal');
     const downloadExcelForm = document.getElementById('download-excel-form');
-    const confirmDownloadBtn = document.getElementById('confirm-download-btn');
+    const downloadBtn = document.getElementById('download-btn');
     const downloadLoading = document.getElementById('download-loading');
     const downloadResult = document.getElementById('download-result');
-    const downloadModalFooter = document.getElementById('download-modal-footer');
     const downloadMessage = document.getElementById('download-message');
     const downloadFilename = document.getElementById('download-filename');
     const copyLinkBtn = document.getElementById('copy-link-btn');
@@ -16,13 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let downloadUrl = '';
     let filename = '';
     
-    // Initialize Bootstrap modal
-    const modal = new bootstrap.Modal(document.getElementById('downloadExcelModal'));
+    // Only set default dates if they are not already set
+    const fromDateElement = document.getElementById('from-date');
+    const toDateElement = document.getElementById('to-date');
     
-    // Handle download button click - show modal
-    downloadExcelBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    if (!fromDateElement.value || !toDateElement.value) {
         // Set default date values (today for both from and to) in yyyy-mm-dd format
         const today = new Date();
         const year = today.getFullYear();
@@ -30,71 +25,37 @@ document.addEventListener('DOMContentLoaded', function() {
         const day = String(today.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
         
-        document.getElementById('from-date').value = formattedDate;
-        document.getElementById('to-date').value = formattedDate;
-        document.getElementById('download-password').value = '';
-        
-        // Reset modal state
-        downloadExcelForm.style.display = 'block';
-        downloadLoading.style.display = 'none';
-        downloadResult.style.display = 'none';
-        downloadModalFooter.style.display = 'block';
-        
-        // Reset modal footer
-        downloadModalFooter.innerHTML = `
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-            <button type="button" class="btn btn-success" id="confirm-download-btn">
-                <i data-feather="download" class="me-2"></i>
-                Download
-            </button>
-        `;
-        
-        // Re-attach event listener to the new button
-        document.getElementById('confirm-download-btn').addEventListener('click', function() {
-            const event = new Event('click');
-            confirmDownloadBtn.dispatchEvent(event);
-        });
-        
-        // Re-initialize feather icons
-        feather.replace();
-        
-        // Show modal
-        modal.show();
-    });
+        fromDateElement.value = formattedDate;
+        toDateElement.value = formattedDate;
+    }
     
-    // Handle confirm download button click
-    confirmDownloadBtn.addEventListener('click', function() {
+    // Handle form submit
+    if (downloadExcelForm) {
+        downloadExcelForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
         const fromDate = document.getElementById('from-date').value;
         const toDate = document.getElementById('to-date').value;
-        const password = document.getElementById('download-password').value;
         
-        // Validate form - only password is required
-        if (!password) {
-            alertify.error('Mohon masukkan password');
+        // Validate dates
+        if (!fromDate || !toDate) {
+            alertify.error('Mohon pilih tanggal dari dan sampai');
             return;
         }
         
-        // Validate date range if both dates are provided
-        if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+        // Validate date range
+        if (new Date(fromDate) > new Date(toDate)) {
             alertify.error('Tanggal dari tidak boleh lebih besar dari tanggal sampai');
             return;
         }
         
         // Show loading state
         downloadExcelForm.style.display = 'none';
-        downloadModalFooter.style.display = 'none';
         downloadLoading.style.display = 'block';
+        downloadResult.style.display = 'none';
         
-        // Prepare API URL - handle optional dates
-        let apiUrl = `https://ardi-report-system.webentercode.com/api/reports/download?password=${password}`;
-        
-        // Add dates to URL only if they are provided
-        if (fromDate) {
-            apiUrl += `&from=${fromDate}`;
-        }
-        if (toDate) {
-            apiUrl += `&to=${toDate}`;
-        }
+        // Prepare API URL
+        let apiUrl = `https://ardi-report-system.webentercode.com/api/reports/download?from=${fromDate}&to=${toDate}`;
         
         // Make AJAX request
         fetch(apiUrl, {
@@ -118,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Check if total_reports is 0
                 if (data.total_reports === 0) {
                     // Show no data message
-                    downloadExcelForm.style.display = 'none';
                     downloadResult.innerHTML = `
                         <div class="alert alert-warning">
                             <i data-feather="info" class="me-2"></i>
@@ -126,12 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     `;
                     downloadResult.style.display = 'block';
-                    
-                    // Update modal footer with close button
-                    downloadModalFooter.innerHTML = `
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    `;
-                    downloadModalFooter.style.display = 'block';
+                    downloadExcelForm.style.display = 'block';
                     
                     // Re-initialize feather icons
                     feather.replace();
@@ -145,18 +100,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     downloadFilename.textContent = filename;
                     downloadResult.style.display = 'block';
                     
-                    // Update modal footer with close button
-                    downloadModalFooter.innerHTML = `
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    `;
-                    downloadModalFooter.style.display = 'block';
-                    
                     alertify.success('File Excel berhasil digenerate!');
                 }
             } else {
                 // Show error
                 downloadExcelForm.style.display = 'block';
-                downloadModalFooter.style.display = 'block';
                 alertify.error(data.message || 'Terjadi kesalahan saat menggenerate file Excel');
             }
         })
@@ -166,14 +114,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide loading state and show error
             downloadLoading.style.display = 'none';
             downloadExcelForm.style.display = 'block';
-            downloadModalFooter.style.display = 'block';
             
             alertify.error('Terjadi kesalahan koneksi. Silakan coba lagi.');
         });
-    });
+        });
+    }
     
     // Handle copy link button click
-    copyLinkBtn.addEventListener('click', function() {
+    if (copyLinkBtn) {
+        copyLinkBtn.addEventListener('click', function() {
         if (downloadUrl) {
             // Use modern Clipboard API
             if (navigator.clipboard && window.isSecureContext) {
@@ -189,7 +138,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 fallbackCopyTextToClipboard(downloadUrl);
             }
         }
-    });
+        });
+    }
     
     // Fallback function for copying text
     function fallbackCopyTextToClipboard(text) {
@@ -218,7 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Handle download file button click
-    downloadFileBtn.addEventListener('click', function() {
+    if (downloadFileBtn) {
+        downloadFileBtn.addEventListener('click', function() {
         if (downloadUrl) {
             // Create temporary link element to trigger download
             const tempLink = document.createElement('a');
@@ -230,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             alertify.success('Download dimulai...');
         }
-    });
+        });
+    }
     
 });
