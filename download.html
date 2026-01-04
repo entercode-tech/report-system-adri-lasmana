@@ -15,6 +15,28 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
     
     <link rel="stylesheet" href="assets/styles.css?v=0.1">
+    
+    <style>
+        .report-checkbox {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+        }
+        
+        .report-item {
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .select-all-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(248, 249, 250, 0.95);
+            backdrop-filter: blur(5px);
+        }
+    </style>
 </head>
 
 <body>
@@ -24,7 +46,7 @@
                 <!-- Brand with Logo -->
                 <div class="navbar-brand">
                     <i data-feather="download" class="me-2"></i>
-                    <span>Download Laporan</span>
+                    <span>Download & Kelola Laporan</span>
                 </div>
                 
                 <!-- Back Button -->
@@ -36,8 +58,8 @@
         </nav>
 
         <div class="container-fluid p-3 mt-3">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
+            <div class="row">
+                <div class="col-12">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0">
@@ -47,15 +69,17 @@
                         </div>
                         <div class="card-body">
                             <form id="download-excel-form">
-                                <div class="mb-3">
-                                    <label for="from-date" class="form-label">Dari Tanggal</label>
-                                    <input type="date" class="form-control" id="from-date" required>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="from-date" class="form-label">Dari Tanggal</label>
+                                        <input type="date" class="form-control" id="from-date" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="to-date" class="form-label">Sampai Tanggal</label>
+                                        <input type="date" class="form-control" id="to-date" required>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="to-date" class="form-label">Sampai Tanggal</label>
-                                    <input type="date" class="form-control" id="to-date" required>
-                                </div>
-                                <div class="d-grid gap-2">
+                                <div class="d-grid gap-2 d-md-flex">
                                     <button type="submit" class="btn btn-success" id="download-btn">
                                         <i data-feather="download" class="me-2"></i>
                                         Download Excel
@@ -80,7 +104,7 @@
                                 <div class="mb-3">
                                     <strong>File:</strong> <span id="download-filename"></span>
                                 </div>
-                                <div class="d-grid gap-2">
+                                <div class="d-grid gap-2 d-md-flex">
                                     <button id="copy-link-btn" class="btn btn-outline-primary">
                                         <i data-feather="copy" class="me-2"></i>
                                         Copy Link
@@ -93,6 +117,51 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i data-feather="list" class="me-2"></i>
+                                Daftar Semua Laporan
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="reports-list" id="reports-list-container">
+                                <!-- Konten laporan akan dimuat secara dinamis melalui JavaScript -->
+                                <div class="text-center p-4" id="no-reports-message">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-inbox" style="width: 48px; height: 48px; margin-bottom: 15px; opacity: 0.5;"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 2 2h16a2 2 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+                                    <p>Memuat daftar laporan...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Laporan -->
+    <div class="modal fade" id="reportDetailModal" tabindex="-1" aria-labelledby="reportDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportDetailModalLabel">
+                        <i data-feather="file-text" class="me-2"></i>
+                        Detail Laporan
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="report-detail-content">
+                        <!-- Konten detail laporan akan dimuat secara dinamis -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -115,9 +184,14 @@
     <!-- Alertify JS -->
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
+    <!-- Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
     <!-- Custom JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Initializing download page');
+            
             // Get DOM elements
             const downloadExcelForm = document.getElementById('download-excel-form');
             const downloadBtn = document.getElementById('download-btn');
@@ -143,6 +217,16 @@
             
             // Initialize feather icons
             feather.replace();
+            
+            // Load all reports - ensure DOM is ready before calling function
+            $(document).ready(function() {
+                if (typeof loadAllReports === 'function') {
+                    console.log('DOM is ready, calling loadAllReports...');
+                    loadAllReports();
+                } else {
+                    console.error('loadAllReports function is not available');
+                }
+            });
             
             // Handle form submit
             downloadExcelForm.addEventListener('submit', function(e) {
@@ -295,6 +379,9 @@
             });
         });
     </script>
+    
+    <!-- Get API for All Reports -->
+    <script src="assets/api/get-all.js?v=0.1"></script>
 </body>
 
 </html>
