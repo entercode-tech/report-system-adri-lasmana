@@ -1185,6 +1185,18 @@ html {
 .offcanvas-body {
     padding: 0;
     background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.offcanvas-footer {
+    margin-top: auto;
+    background-color: var(--surface-color);
+    border-top: 1px solid var(--border-color);
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    padding: 16px;
 }
 
 /* Reports List Styles */
@@ -1317,4 +1329,15 @@ html {
         font-size: 0.75rem;
         padding: 3px 10px;
     }
+}
+
+/* Password Input Styles */
+.password-input {
+    border: 2px solid var(--border-color) !important;
+    transition: var(--transition);
+}
+
+.password-input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(0, 200, 81, 0.1) !important;
 }

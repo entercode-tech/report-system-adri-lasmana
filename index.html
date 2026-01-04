@@ -59,6 +59,14 @@
                         <p>Belum Ada Laporan</p>
                     </div>
                 </div>
+                
+                <!-- Footer dengan tombol Download Excel -->
+                <div class="offcanvas-footer mt-auto p-3 border-top">
+                    <button id="download-excel-btn" class="btn btn-success w-100 py-2">
+                        <i data-feather="download" class="me-2"></i>
+                        Download Excel
+                    </button>
+                </div>
             </div>
         </div>
         
@@ -297,7 +305,73 @@
                 </div>
             </div>
         </div>
-
+        
+        <!-- Modal Download Excel Filter -->
+        <div class="modal fade" id="downloadExcelModal" tabindex="-1" aria-labelledby="downloadExcelModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downloadExcelModalLabel">
+                            <i data-feather="download" class="me-2"></i>
+                            Download Excel
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="download-excel-form">
+                            <div class="mb-3">
+                                <label for="from-date" class="form-label">Dari Tanggal</label>
+                                <input type="date" class="form-control" id="from-date">
+                            </div>
+                            <div class="mb-3">
+                                <label for="to-date" class="form-label">Sampai Tanggal</label>
+                                <input type="date" class="form-control" id="to-date">
+                            </div>
+                            <div class="mb-3">
+                                <label for="download-password" class="form-label">Password</label>
+                                <input type="password" class="form-control password-input" id="download-password" required>
+                            </div>
+                        </form>
+                        
+                        <!-- Loading State -->
+                        <div id="download-loading" class="text-center" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Mohon tunggu, ini membutuhkan waktu beberapa menit...</p>
+                        </div>
+                        
+                        <!-- Result State -->
+                        <div id="download-result" class="text-center" style="display: none;">
+                            <div class="alert alert-success">
+                                <i data-feather="check-circle" class="me-2"></i>
+                                <span id="download-message"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>File:</strong> <span id="download-filename"></span>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button id="copy-link-btn" class="btn btn-outline-primary">
+                                    <i data-feather="copy" class="me-2"></i>
+                                    Copy Link
+                                </button>
+                                <button id="download-file-btn" class="btn btn-success">
+                                    <i data-feather="download" class="me-2"></i>
+                                    Download File
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" id="download-modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-success" id="confirm-download-btn">
+                            <i data-feather="download" class="me-2"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -331,7 +405,6 @@
     <script src="assets/upload.js?v=0.1"></script>
     <script src="assets/location.js?v=0.5"></script>
     <script src="assets/validation.js?v=0.1"></script>
-    <script src="assets/download-excel.js?v=0.1"></script>
     <script src="assets/leaflet-map.js?v=0.1"></script>
     <script src="assets/api/get.js?v=0.3"></script>
     <script src="assets/api/store.js?v=0.6"></script>
