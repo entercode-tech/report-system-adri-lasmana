@@ -43,6 +43,11 @@ $(document).ready(function() {
                     
                     $('#coords-text').html(`${errorMessage}<br><small style="display: block; margin-top: 5px; opacity: 0.7;"></small>`);
                     alertify.error(errorMessage);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
                 }
             );
         } else {
