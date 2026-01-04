@@ -72,6 +72,13 @@ $(document).ready(function() {
     
     // Function to submit report after getting location
     function submitReport($btn) {
+        // Check if location is available
+        const locationValue = $('#location-input').val();
+        if (!locationValue || locationValue.trim() === '') {
+            alertify.error('Lokasi tidak tersedia. Silakan coba lagi atau izinkan lokasi perangkat Anda.');
+            return;
+        }
+        
         // Show loading state
         const originalText = $btn.html();
         $btn.prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-2"></i> Mengirim...');
