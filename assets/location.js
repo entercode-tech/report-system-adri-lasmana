@@ -2,11 +2,11 @@
 $(document).ready(function() {
     // Tidak otomatis mendapatkan lokasi saat halaman dimuat
     // Tampilkan pesan default
-    $('#coords-text').html('Lokasi akan didapatkan saat membuat laporan<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>');
+    $('#coords-text').html('Klik untuk sinkronkan lokasi<br><small style="display: block; margin-top:5px; opacity: 0.7;"></small>');
     
     // Fungsi untuk refresh lokasi
     $('#location-display').on('click', function() {
-        $('#coords-text').html('Mendapatkan lokasi...<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>');
+        $('#coords-text').html('Mendapatkan lokasi...<br><small style="display: block; margin-top: 5px; opacity: 0.7;"></small>');
         
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -15,7 +15,7 @@ $(document).ready(function() {
                     const lng = position.coords.longitude;
                     
                     // Update tampilan lokasi
-                    $('#coords-text').html(`${lat.toFixed(6)}, ${lng.toFixed(6)}<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>`);
+                    $('#coords-text').html(`${lat.toFixed(6)}, ${lng.toFixed(6)}<br><small style="display: block; margin-top: 5px; opacity: 0.7;"></small>`);
                     
                     // Simpan ke input hidden
                     $('#location-input').val(`${lat},${lng}`);
@@ -41,12 +41,12 @@ $(document).ready(function() {
                             break;
                     }
                     
-                    $('#coords-text').html(`${errorMessage}<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>`);
+                    $('#coords-text').html(`${errorMessage}<br><small style="display: block; margin-top: 5px; opacity: 0.7;"></small>`);
                     alertify.error(errorMessage);
                 }
             );
         } else {
-            $('#coords-text').html('Browser tidak mendukung geolocation.<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>');
+            $('#coords-text').html('Browser tidak mendukung geolocation.<br><small style="display: block; margin-top: 5px; opacity: 0.7;"></small>');
             alertify.error('Browser tidak mendukung geolocation.');
         }
     });

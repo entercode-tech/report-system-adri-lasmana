@@ -175,7 +175,7 @@ $(document).ready(function() {
         // Clear form fields
         $('#tiang, #pon, #ms, #odp, #redaman-in, #redaman-out, #keterangan').val('');
         $('#location-input').val('');
-        $('#coords-text').html('Lokasi akan didapatkan saat membuat laporan<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>');
+        $('#coords-text').html('Klik untuk sinkronkan lokasi<br><small style="display: block; margin-top:5px; opacity: 0.7;"></small>');
         
         // Clear uploaded images
         $('.upload-box').each(function() {
