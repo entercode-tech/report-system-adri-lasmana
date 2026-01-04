@@ -21,82 +21,19 @@ $(document).ready(function() {
             return;
         }
         
-        // Get location before submitting
-        getLocationAndSubmit($(this));
-    });
-    
-    // Function to get location and then submit
-    function getLocationAndSubmit($btn) {
-        // Disable button and show spinner
-        $btn.prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-2"></i> Mendapatkan lokasi...');
-        
-        // Show loading state for location
-        alertify.message('Mendapatkan lokasi...');
-        
-        if (!navigator.geolocation) {
-            alertify.error('Browser tidak mendukung geolocation. Silakan gunakan browser lain.');
-            // Restore button state
-            $btn.prop('disabled', false).html('<i data-feather="file-text" class="me-2"></i> Buat Laporan');
-            feather.replace();
-            return;
-        }
-        
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                
-                // Update tampilan lokasi
-                $('#coords-text').html(`${lat.toFixed(6)}, ${lng.toFixed(6)}<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>`);
-                
-                // Simpan ke input hidden
-                $('#location-input').val(`${lat},${lng}`);
-                
-                alertify.success('Lokasi berhasil didapatkan');
-                
-                // Continue with submission
-                submitReport($btn);
-            },
-            function(error) {
-                let errorMessage = 'Gagal mendapatkan lokasi: ';
-                
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        errorMessage += 'Izin lokasi ditolak. Silakan izinkan lokasi perangkat Anda.';
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        errorMessage += 'Informasi lokasi tidak tersedia.';
-                        break;
-                    case error.TIMEOUT:
-                        errorMessage += 'Permintaan lokasi timeout.';
-                        break;
-                    case error.UNKNOWN_ERROR:
-                        errorMessage += 'Terjadi kesalahan yang tidak diketahui.';
-                        break;
-                }
-                
-                $('#coords-text').html(`${errorMessage}<br><small style="display: block; margin-top: 5px; opacity: 0.7;">(klik untuk refresh)</small>`);
-                alertify.error(errorMessage);
-                
-                // Restore button state
-                $btn.prop('disabled', false).html('<i data-feather="file-text" class="me-2"></i> Buat Laporan');
-                feather.replace();
-            }
-        );
-    }
-    
-    // Function to submit report after getting location
-    function submitReport($btn) {
         // Check if location is available
         const locationValue = $('#location-input').val();
         if (!locationValue || locationValue.trim() === '') {
-            alertify.error('Lokasi tidak tersedia. Silakan coba lagi atau izinkan lokasi perangkat Anda.');
-            // Restore button state
-            $btn.prop('disabled', false).html('<i data-feather="file-text" class="me-2"></i> Buat Laporan');
-            feather.replace();
+            alertify.error('Silakan sinkronkan lokasi terlebih dahulu dengan mengklik area lokasi');
             return;
         }
         
+        // Submit report directly
+        submitReport($(this));
+    });
+    
+    // Function to submit report after getting location
+    function submitReport($btn) {
         // Show loading state
         const originalText = '<i data-feather="file-text" class="me-2"></i> Buat Laporan';
         $btn.prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-2"></i> Mengirim...');
