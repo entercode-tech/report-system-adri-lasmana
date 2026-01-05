@@ -70,7 +70,7 @@ $(document).ready(function() {
                 const imgSrc = $(this).attr('src');
                 if (imgSrc && imgSrc.startsWith('data:')) {
                     // Compress image before sending
-                    compressImage(imgSrc, 100, 0.8, function(compressedBlob) {
+                    compressImage(imgSrc, 500, 0.8, function(compressedBlob) {
                         // Add mark parameter to indicate position
                         formData.append('images[]', compressedBlob, `image_${index + 1}.jpg`);
                         formData.append('marks[]', `Gambar ${index + 1}`);
