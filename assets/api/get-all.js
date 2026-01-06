@@ -39,7 +39,7 @@ $(document).ready(function() {
                     console.log('Reports data stored globally:', window.reportsData);
                     renderAllReports(window.reportsData);
                 } else {
-                    const errorMessage = response.message || 'Gagal memuat daftar laporan';
+                    const errorMessage = response.message || 'Terjadi kesalahan';
                     console.error('API Error:', errorMessage);
                     alertify.error(errorMessage);
                     
@@ -53,7 +53,7 @@ $(document).ready(function() {
                 console.error('Error:', error);
                 console.error('Response Text:', xhr.responseText);
                 
-                let errorMessage = 'Gagal memuat daftar laporan';
+                let errorMessage = 'Terjadi kesalahan';
                 
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage = xhr.responseJSON.message;
@@ -68,7 +68,7 @@ $(document).ready(function() {
         });
     };
     
-    // Render All Reports with checkboxes (for download.html)
+    // Render All Reports (for download.html)
     function renderAllReports(reports) {
         console.log('Rendering reports:', reports);
         console.log('Reports to render:', reports.length);
@@ -84,34 +84,29 @@ $(document).ready(function() {
         
         console.log('Number of reports to render:', reports.length);
         
-        // Add select all checkbox
-        const selectAllHtml = `
-            <div class="select-all-container mb-3 p-2 bg-light rounded">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="selectAllReports">
-                    <label class="form-check-label" for="selectAllReports">
-                        Pilih Semua
-                    </label>
-                    <button id="deleteSelectedBtn" class="btn btn-danger btn-sm ms-2" disabled>
-                        <i data-feather="trash-2" class="me-1"></i>
-                        Hapus Yang Dipilih
-                    </button>
-                </div>
-            </div>
-        `;
-        $reportsList.append(selectAllHtml);
-        
         reports.forEach(function(report, index) {
             console.log(`Rendering report ${index + 1}:`, report);
             
             const reportDate = new Date(report.created_at || report.date).toLocaleString('id-ID');
+            
+            // Get first image as thumbnail, or use default icon
+            let iconHtml = '';
+            if (report.images && report.images.length > 0) {
+                const firstImage = report.images[0];
+                const imageUrl = firstImage.image_url;
+                iconHtml = `
+                    <img src="${imageUrl}" class="report-thumbnail" alt="${report.tiang || 'Laporan'}" style="width: 48px; height: 48px; object-fit: cover; border-radius: var(--border-radius-small);">
+                `;
+            } else {
+                iconHtml = `
+                    <i data-feather="file-text" style="width: 48px; height: 48px;"></i>
+                `;
+            }
+            
             const reportItem = `
                 <div class="report-item" data-id="${report.id}">
-                    <div class="report-checkbox">
-                        <input class="form-check-input report-checkbox" type="checkbox" value="${report.id}">
-                    </div>
                     <div class="report-icon">
-                        <i data-feather="file-text"></i>
+                        ${iconHtml}
                     </div>
                     <div class="report-content">
                         <div class="report-date">${reportDate}</div>
@@ -119,6 +114,7 @@ $(document).ready(function() {
                         <div class="report-location">${report.lokasi || 'N/A'}</div>
                         <div class="report-actions">
                             <button class="btn btn-sm btn-outline-info view-report-btn" data-id="${report.id}">Lihat</button>
+                            <button class="btn btn-sm btn-outline-danger delete-report-btn" data-id="${report.id}">Hapus</button>
                         </div>
                     </div>
                 </div>
@@ -131,67 +127,49 @@ $(document).ready(function() {
         // Re-initialize feather icons
         feather.replace();
         
-        // Add event listeners for select all checkbox
-        $('#selectAllReports').on('change', function() {
-            const isChecked = $(this).prop('checked');
-            $('.report-checkbox').prop('checked', isChecked);
-            updateDeleteButton();
-        });
-        
-        // Add event listeners for individual checkboxes
-        $('.report-checkbox').on('change', function() {
-            updateDeleteButton();
-            updateSelectAllCheckbox();
-        });
-        
         // Add event listeners for view buttons
         $('.view-report-btn').on('click', function() {
             const reportId = $(this).data('id');
             viewReportDetails(reportId);
         });
         
-        // Add event listener for delete selected button
-        $('#deleteSelectedBtn').on('click', function() {
-            deleteSelectedReports();
+        // Add event listeners for delete buttons
+        $('.delete-report-btn').on('click', function() {
+            const reportId = $(this).data('id');
+            deleteSingleReport(reportId);
         });
     }
     
-    // Update delete button state
-    function updateDeleteButton() {
-        const selectedCount = $('.report-checkbox:checked').length;
-        $('#deleteSelectedBtn').prop('disabled', selectedCount === 0);
-        if (selectedCount > 0) {
-            $('#deleteSelectedBtn').html(`<i data-feather="trash-2" class="me-1"></i> Hapus (${selectedCount})`);
-        } else {
-            $('#deleteSelectedBtn').html('<i data-feather="trash-2" class="me-1"></i> Hapus Yang Dipilih');
-        }
-        feather.replace();
-    }
-    
-    // Update select all checkbox state
-    function updateSelectAllCheckbox() {
-        const totalCheckboxes = $('.report-checkbox').length;
-        const checkedCheckboxes = $('.report-checkbox:checked').length;
-        $('#selectAllReports').prop('checked', totalCheckboxes === checkedCheckboxes && totalCheckboxes > 0);
-    }
-    
-    // Delete selected reports
-    function deleteSelectedReports() {
-        const selectedIds = [];
-        $('.report-checkbox:checked').each(function() {
-            selectedIds.push($(this).val());
-        });
-        
-        if (selectedIds.length === 0) {
-            alertify.error('Tidak ada laporan yang dipilih');
-            return;
-        }
-        
+    // Delete single report
+    function deleteSingleReport(reportId) {
         alertify.confirm(
-            `Apakah Anda yakin ingin menghapus ${selectedIds.length} laporan yang dipilih?`,
+            'Apakah Anda yakin ingin menghapus laporan ini?',
             function() {
                 // User confirmed, proceed with deletion
-                deleteReportsLoop(selectedIds);
+                console.log(`Deleting report with ID: ${reportId}`);
+                
+                $.ajax({
+                    url: `https://ardi-report-system.webentercode.com/api/reports/${reportId}`,
+                    type: 'DELETE',
+                    success: function(response) {
+                        console.log(`Delete response for ID ${reportId}:`, response);
+                        if (response.success) {
+                            alertify.success(response.message || 'Laporan berhasil dihapus');
+                            // Reload reports list
+                            loadAllReports();
+                        } else {
+                            alertify.error(response.message || 'Terjadi kesalahan');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(`Failed to delete report with ID ${reportId}:`, xhr.responseText);
+                        let errorMessage = 'Terjadi kesalahan';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        alertify.error(errorMessage);
+                    }
+                });
             },
             function() {
                 // User cancelled
@@ -200,60 +178,9 @@ $(document).ready(function() {
         );
     }
     
-    // Delete reports using loop request
-    function deleteReportsLoop(ids) {
-        let deletedCount = 0;
-        let failedCount = 0;
-        
-        console.log('Deleting reports with IDs:', ids);
-        
-        // Show loading state
-        alertify.message('Menghapus laporan...');
-        
-        // Create an array of promises for all delete requests
-        const deletePromises = ids.map(id => {
-            return new Promise((resolve) => {
-                console.log(`Deleting report with ID: ${id}`);
-                $.ajax({
-                    url: `https://ardi-report-system.webentercode.com/api/reports/${id}`,
-                    type: 'DELETE',
-                    success: function(response) {
-                        console.log(`Delete response for ID ${id}:`, response);
-                        if (response.success) {
-                            deletedCount++;
-                        } else {
-                            failedCount++;
-                        }
-                        resolve();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(`Failed to delete report with ID ${id}:`, xhr.responseText);
-                        failedCount++;
-                        resolve();
-                    }
-                });
-            });
-        });
-        
-        // Wait for all delete requests to complete
-        Promise.all(deletePromises).then(() => {
-            console.log(`Delete operation completed. Success: ${deletedCount}, Failed: ${failedCount}`);
-            
-            // Show result
-            if (failedCount === 0) {
-                alertify.success(`Berhasil menghapus ${deletedCount} laporan`);
-            } else {
-                alertify.warning(`Berhasil menghapus ${deletedCount} laporan, gagal menghapus ${failedCount} laporan`);
-            }
-            
-            // Reload reports list
-            loadAllReports();
-        });
-    }
-    
     // View Report Details Function
     window.viewReportDetails = function(reportId) {
-        // Find report data from the global reportsData array
+        // Find report data from global reportsData array
         const report = window.reportsData.find(r => r.id == reportId);
         
         if (!report) {
